@@ -2,6 +2,14 @@
 
 Welcome to the **Metadata Graph Ontology** documentation! This repository provides a comprehensive guide to the ontology designed to facilitate the creation of **Enterprise Knowledge Graphs (EKGs)**. By leveraging this vocabulary, you can model and integrate metadata from various data sources into a unified semantic framework, effectively capturing every step involved in constructing an EKG.
 
+---
+
+<p align="center">
+  <img src="images/metadata-graph-ontology-banner.png" alt="Metadata Graph Ontology" width="600">
+</p>
+
+---
+
 ## Table of Contents
 
 - [Introduction](#introduction)
@@ -11,12 +19,27 @@ Welcome to the **Metadata Graph Ontology** documentation! This repository provid
   - [Step 2: Construction of Semantic Views](#step-2-construction-of-semantic-views)
   - [Step 3: Construction of Linkset Views](#step-3-construction-of-linkset-views)
   - [Step 4: Construction of Fusion Views](#step-4-construction-of-fusion-views)
+  - [Additional Step: Unification View Construction](#additional-step-unification-view-construction)
 - [Metadata Graph Ontology Overview](#metadata-graph-ontology-overview)
   - [Classes](#classes)
   - [Properties](#properties)
-- [Usage Examples](#usage-examples)
+- [Advanced Uses of the Metadata Graph Ontology](#advanced-uses-of-the-metadata-graph-ontology)
+  - [Dynamic Data Lineage and Provenance Tracking](#dynamic-data-lineage-and-provenance-tracking)
+  - [Real-Time Lineage Visibility](#real-time-lineage-visibility)
+  - [Metadata-Driven Discovery](#metadata-driven-discovery)
+  - [Impact Alerts](#impact-alerts)
+  - [Governance and Compliance](#governance-and-compliance)
+    - [Dynamic Policy Enforcement](#dynamic-policy-enforcement)
+    - [Dynamic Metadata Propagation](#dynamic-metadata-propagation)
+  - [Conflict Detection and Resolution](#conflict-detection-and-resolution)
+    - [Active Conflict Identification](#active-conflict-identification)
+    - [Resolution Propagation](#resolution-propagation)
+- [Use Cases and Examples](#use-cases-and-examples)
+  - [Case Study: Building an EKG for a Retail Company](#case-study-building-an-ekg-for-a-retail-company)
+  - [Advanced Examples](#advanced-examples)
 - [Contributing](#contributing)
 - [License](#license)
+- [Additional Resources](#additional-resources)
 
 ## Introduction
 
@@ -33,9 +56,13 @@ An **Enterprise Knowledge Graph** (EKG) is a structured representation of an org
 
 By utilizing the Metadata Graph Ontology, organizations can define standard vocabularies and schemas to represent their data consistently across different domains, while also capturing the metadata of each construction step.
 
+<p align="center">
+  <img src="images/ekg-overview.png" alt="Enterprise Knowledge Graph Overview" width="700">
+</p>
+
 ## Incremental Construction of the META-EKG
 
-The proposal for the incremental construction of the **META-EKG** comprises five primary steps (with an additional step), where for each step carried out in the construction of the EKG, the Metadata Graph Ontology is used to represent the metadata.
+The proposal for the incremental construction of the **META-EKG** comprises four primary steps (with an additional unification step), where for each step carried out in the construction of the EKG, the Metadata Graph Ontology is used to represent the metadata.
 
 ### Step 1: Knowledge Acquisition
 
@@ -49,20 +76,11 @@ The proposal for the incremental construction of the **META-EKG** comprises five
 - Use `drm:DataAsset` to represent data sources.
 - Capture provenance using `vekg:DataSourceProvenance` and properties like `pav:createdBy`, `pav:createdOn`, and `pav:importedFrom`.
 
-**Example:**
+**Visualization:**
 
-```turtle
-:DataSource1 rdf:type drm:DataAsset ;
-    rdfs:label "Customer Database"@en ;
-    dcterms:description "A relational database containing customer records."@en ;
-    vekg:hasProvenance :DataSource1Provenance .
-
-:DataSource1Provenance rdf:type vekg:DataSourceProvenance ;
-    pav:createdBy :DataEngineer1 ;
-    pav:createdOn "2023-10-01"^^xsd:date ;
-    pav:importedFrom "LegacyCRMSystem" ;
-    pav:sourceLastAccessedOn "2023-10-15T10:00:00Z"^^xsd:dateTime .
-```
+<p align="center">
+  <img src="images/step1-knowledge-acquisition.png" alt="Step 1: Knowledge Acquisition" width="600">
+</p>
 
 ### Step 2: Construction of Semantic Views
 
@@ -78,20 +96,11 @@ The proposal for the incremental construction of the **META-EKG** comprises five
 - Represent ontologies with `vekg:SemanticViewOntology` and `vekg:LocalOntology`.
 - Capture mappings using `vekg:Mappings`.
 
-**Example:**
+**Visualization:**
 
-```turtle
-:SemanticView rdf:type vekg:SemanticView ;
-    rdfs:label "Global Semantic View"@en ;
-    vekg:hasExportedSemanticView :ExportedView_DS1, :ExportedView_DS2 ;
-    vekg:hasSemanticViewOntology :DomainOntology .
-
-:ExportedView_DS1 rdf:type vekg:ExportedSemanticView ;
-    rdfs:label "Exported View for DataSource1"@en ;
-    vekg:hasLocalOntology :LocalOntology_DS1 ;
-    vekg:hasMappings :Mappings_DS1 ;
-    vekg:hasDataSource :DataSource1 .
-```
+<p align="center">
+  <img src="images/step2-semantic-views.png" alt="Step 2: Construction of Semantic Views" width="600">
+</p>
 
 ### Step 3: Construction of Linkset Views
 
@@ -105,26 +114,11 @@ The proposal for the incremental construction of the **META-EKG** comprises five
 - Define linkage rules with `vekg:LinkageRule`.
 - Capture link functions and match properties.
 
-**Example:**
+**Visualization:**
 
-```turtle
-:LinksetView_DS1_DS2 rdf:type vekg:LinksetView ;
-    rdfs:label "Linkset between DataSource1 and DataSource2"@en ;
-    vekg:hasLinkageRule :LinkageRule_EmailMatch ;
-    vekg:sourceView :ExportedView_DS1 ;
-    vekg:targetView :ExportedView_DS2 ;
-    void:linkPredicate owl:sameAs .
-
-:LinkageRule_EmailMatch rdf:type vekg:LinkageRule ;
-    vekg:hasLinkFunction :EmailMatchFunction ;
-    vekg:hasMatchClass :Customer .
-
-:EmailMatchFunction rdf:type vekg:Compare ;
-    vekg:operator "equalsIgnoreCase" ;
-    vekg:inputSource "email" ;
-    vekg:inputTarget "emailAddress" ;
-    vekg:threshold 1.0 .
-```
+<p align="center">
+  <img src="images/step3-linkset-views.png" alt="Step 3: Construction of Linkset Views" width="600">
+</p>
 
 ### Step 4: Construction of Fusion Views
 
@@ -138,23 +132,11 @@ The proposal for the incremental construction of the **META-EKG** comprises five
 - Define fusion properties with `vekg:PropertyFusionAssertion` and `vekg:FusionProperty`.
 - Specify fusion functions.
 
-**Example:**
+**Visualization:**
 
-```turtle
-:FusionView_Customers rdf:type vekg:FusionView ;
-    rdfs:label "Fusion View for Customer Data"@en ;
-    vekg:hasPropertyFusionAssertion :EmailFusionAssertion ;
-    vekg:hasGeneralizationClass :Customer .
-
-:EmailFusionAssertion rdf:type vekg:PropertyFusionAssertion ;
-    vekg:hasFusionProperty :email ;
-    vekg:fusionFunction "mostRecentValue" .
-
-:email rdf:type vekg:FusionProperty ;
-    rdfs:label "Email Address"@en ;
-    rdfs:domain :Customer ;
-    rdfs:range xsd:string .
-```
+<p align="center">
+  <img src="images/step4-fusion-views.png" alt="Step 4: Construction of Fusion Views" width="600">
+</p>
 
 ### Additional Step: Unification View Construction
 
@@ -167,14 +149,7 @@ The proposal for the incremental construction of the **META-EKG** comprises five
 - Use `vekg:UnificationView` to represent unification specifications.
 - Define normalization functions with `vekg:normalizeFunction`.
 
-**Example:**
-
-```turtle
-:UnificationView_Customers rdf:type vekg:UnificationView ;
-    rdfs:label "Unification View for Customer Data"@en ;
-    vekg:normalizeFunction "standardizeDateFormats" ;
-    vekg:hasGeneralizationClass :Customer .
-```
+---
 
 ## Metadata Graph Ontology Overview
 
@@ -204,25 +179,37 @@ Below is a detailed explanation of the key classes in the Metadata Graph Ontolog
 
 A **Metadata Graph** is a Knowledge Graph that describes the metadata produced during the construction of an EKG.
 
+- **Usage:** Captures the overall metadata about the EKG construction process.
+
 #### 2. **Semantic View (`vekg:SemanticView`)**
 
 The **Semantic View** represents the global semantic perspective of the EKG, integrating domain ontologies and data source schemas.
+
+- **Usage:** Defines the unified schema and vocabulary used across the EKG.
 
 #### 3. **Exported Semantic View (`vekg:ExportedSemanticView`)**
 
 An **Exported Semantic View** is a tuple `(OVi, MVi)` defined over the schema of a local data source, containing the local ontology, mappings, and metadata.
 
+- **Usage:** Represents the semantic view specific to a data source, including its ontology and mappings.
+
 #### 4. **Mappings (`vekg:Mappings`)**
 
 Mappings are a set of rules that enable the transformation of a specific data source according to a Local Ontology.
 
+- **Usage:** Specifies how data from a source maps to the ontology terms.
+
 #### 5. **Linkset View (`vekg:LinksetView`)**
 
-A **Linkset View** specifies relationships (`sameAs`, `seeAlso`, etc.) between instances in different exported semantic views, aiding in identity resolution.
+A **Linkset View** specifies relationships (`owl:sameAs`, `rdfs:seeAlso`, etc.) between instances in different exported semantic views, aiding in identity resolution.
+
+- **Usage:** Captures the metadata about links established between different data sources.
 
 #### 6. **Fusion View (`vekg:FusionView`)**
 
 A **Fusion View** contains metadata about how data from different sources should be fused to create a unified representation.
+
+- **Usage:** Defines rules and functions for merging data, resolving conflicts, and consolidating information.
 
 ### Properties
 
@@ -231,6 +218,7 @@ Below are key properties used to relate classes within the Metadata Graph Ontolo
 #### **Data Source Properties**
 
 - `vekg:hasProvenance` - Links a data source to its provenance metadata.
+- `pav:createdBy`, `pav:createdOn` - Capture provenance details.
 
 #### **Semantic View Properties**
 
@@ -245,76 +233,343 @@ Below are key properties used to relate classes within the Metadata Graph Ontolo
 
 - `vekg:hasLinkageRule` - Associates a Linkset View with a linkage rule.
 - `vekg:hasLinkFunction` - Specifies the function used in a linkage rule.
+- `vekg:hasMatchClass`, `vekg:hasMatchProperty` - Define the classes and properties used in matching.
 
 #### **Fusion Properties**
 
 - `vekg:hasPropertyFusionAssertion` - Links a Fusion View to its property fusion assertions.
 - `vekg:hasFusionProperty` - Specifies the property to be fused.
+- `vekg:fusionFunction` - Defines the function used to fuse data.
 
-## Usage Examples
+---
 
-### Example 1: Defining Data Source Metadata
+## Advanced Uses of the Metadata Graph Ontology
 
-```turtle
-:DataSource2 rdf:type drm:DataAsset ;
-    rdfs:label "Sales Records CSV Files"@en ;
-    dcterms:description "A collection of CSV files containing sales records."@en ;
-    vekg:hasProvenance :DataSource2Provenance .
+The Metadata Graph Ontology not only aids in building EKGs but also enhances various data management aspects, including lineage tracking, discovery, governance, and conflict resolution.
 
-:DataSource2Provenance rdf:type vekg:DataSourceProvenance ;
-    pav:providedBy :ExternalVendor ;
-    pav:createdOn "2023-09-15"^^xsd:date ;
-    pav:importedOn "2023-10-05"^^xsd:date ;
-    pav:sourceLastAccessedOn "2023-10-15T12:00:00Z"^^xsd:dateTime .
-```
+### Dynamic Data Lineage and Provenance Tracking
 
-### Example 2: Creating Mappings
+By modeling data sources and their transformations using the ontology, you can achieve **dynamic data lineage tracking**. Each step—from raw data acquisition to final integration—is captured, allowing for:
+
+- **Traceability:** Understand how data moves and transforms across the system.
+- **Auditability:** Facilitate audits by providing a clear lineage of data transformations.
+
+**Example:**
 
 ```turtle
-:Mappings_DS2 rdf:type vekg:Mappings ;
-    rdfs:label "Mappings for DataSource2"@en ;
-    vekg:urlMappings "http://example.com/mappings/ds2-mappings.ttl"^^xsd:anyURI ;
-    vekg:prefixies "ex: <http://example.com/ns#>" .
+# Define a transformation process
+:Transformation_Process1 rdf:type vekg:Transformation ;
+    rdfs:label "ETL Process for Sales Data"@en ;
+    pav:createdBy :DataEngineer1 ;
+    pav:createdOn "2023-10-20"^^xsd:date ;
+    prov:used :DataSource_SalesRaw ;
+    prov:generated :DataSource_SalesTransformed .
 
-# Mapping example using R2RML
-@prefix rr: <http://www.w3.org/ns/r2rml#> .
+# Link data sources with the transformation
+:DataSource_SalesRaw rdf:type drm:DataAsset ;
+    rdfs:label "Raw Sales Data"@en ;
+    vekg:hasProvenance :Provenance_SalesRaw .
 
-:TriplesMap_DS2 rr:logicalTable [ rr:tableName "sales_records" ] ;
-    rr:subjectMap [ rr:template "http://example.com/sales/{order_id}" ;
-                    rr:class ex:SalesOrder ] ;
-    rr:predicateObjectMap [
-        rr:predicate ex:orderDate ;
-        rr:objectMap [ rr:column "order_date" ; rr:datatype xsd:date ]
-    ] .
+:DataSource_SalesTransformed rdf:type drm:DataAsset ;
+    rdfs:label "Transformed Sales Data"@en ;
+    vekg:hasProvenance :Provenance_SalesTransformed ;
+    prov:wasGeneratedBy :Transformation_Process1 .
 ```
 
-### Example 3: Defining a Linkage Rule
+In this example, we model a transformation process that uses raw sales data to produce transformed sales data, capturing the lineage and provenance information.
+
+### Real-Time Lineage Visibility
+
+The ontology enables **real-time visibility** into data lineage:
+
+- **Up-to-date Lineage Graphs:** Reflect current data flows and transformations.
+- **Immediate Impact Analysis:** Assess how changes in data sources affect downstream processes.
+
+**Example:**
+
+Suppose we have a dashboard that visualizes lineage using SPARQL queries:
+
+```sparql
+# Query to retrieve lineage information
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?process ?input ?output
+WHERE {
+  ?process a vekg:Transformation ;
+           rdfs:label ?processLabel ;
+           prov:used ?input ;
+           prov:generated ?output .
+}
+```
+
+By running this query, we can dynamically display the lineage of data transformations in our system.
+
+### Metadata-Driven Discovery
+
+A knowledge graph powered by the Metadata Graph Ontology enhances data discovery by:
+
+- **Linking Metadata Elements:** Connect data source descriptions, quality metrics, usage patterns, and lineage.
+- **Intelligent Search and Recommendation:** Users can discover datasets based on rich metadata context, such as usage histories or semantic similarities.
+- **Facilitating Data Catalogs:** Build comprehensive data catalogs that are easily searchable and navigable.
+
+**Example:**
 
 ```turtle
-:LinkageRule_NameMatch rdf:type vekg:LinkageRule ;
-    rdfs:label "Linkage Rule based on Name Similarity"@en ;
-    vekg:hasLinkFunction :NameSimilarityFunction ;
-    vekg:hasMatchClass :Customer .
+# Define data quality metrics
+:DataSource_CustomerProfiles rdf:type drm:DataAsset ;
+    rdfs:label "Customer Profiles Dataset"@en ;
+    vekg:hasQualityMetric :QualityMetric_Completeness .
 
-:NameSimilarityFunction rdf:type vekg:Compare ;
-    vekg:operator "jaroWinkler" ;
-    vekg:inputSource "fullName" ;
-    vekg:inputTarget "customerName" ;
-    vekg:threshold 0.9 .
+:QualityMetric_Completeness rdf:type vekg:QualityMetric ;
+    rdfs:label "Completeness Metric"@en ;
+    vekg:metricValue "0.95"^^xsd:float ;
+    vekg:metricType "Completeness" .
+
+# Define usage patterns
+:DataAnalysis_Project1 rdf:type vekg:UsagePattern ;
+    rdfs:label "Marketing Analysis Project"@en ;
+    vekg:usesDataSource :DataSource_CustomerProfiles ;
+    pav:createdBy :DataAnalyst1 ;
+    pav:createdOn "2023-10-18"^^xsd:date .
 ```
 
-### Example 4: Implementing a Fusion Function
+Users can search for datasets with high completeness or those used in similar projects, enhancing data discovery.
+
+### Impact Alerts
+
+The ontology allows for the implementation of **impact alerts**:
+
+- **Change Propagation Assessment:** When a dataset changes, the graph assesses how these changes affect linked datasets or applications.
+- **Stakeholder Notification:** Automatically notify relevant stakeholders, ensuring real-time awareness of impacts on linked data.
+- **Proactive Issue Resolution:** Enable teams to address potential data issues before they affect business processes.
+
+**Example:**
 
 ```turtle
-:PhoneNumberFusionAssertion rdf:type vekg:PropertyFusionAssertion ;
-    vekg:hasFusionProperty :phoneNumber ;
-    vekg:fusionFunction "mergeUniqueValues" .
+# Define a data source update event
+:DataSource_CRM_Update rdf:type vekg:DataSourceEvent ;
+    rdfs:label "CRM Data Source Updated"@en ;
+    pav:createdOn "2023-10-22T15:00:00Z"^^xsd:dateTime ;
+    vekg:affects :ExportedView_CRM .
 
-:phoneNumber rdf:type vekg:FusionProperty ;
-    rdfs:label "Phone Number"@en ;
-    rdfs:domain :Customer ;
-    rdfs:range xsd:string .
+# Notify stakeholders
+:Notification_CRMUpdate rdf:type vekg:ImpactAlert ;
+    rdfs:label "CRM Data Update Alert"@en ;
+    vekg:alertMessage "CRM data source has been updated, which may affect downstream processes." ;
+    vekg:relatedEvent :DataSource_CRM_Update ;
+    vekg:notify :DataEngineer1, :DataAnalyst1 .
 ```
+
+The system can automatically generate alerts and send notifications to the relevant users.
+
+### Governance and Compliance
+
+#### Dynamic Policy Enforcement
+
+Active metadata in the knowledge graph helps enforce data governance policies:
+
+- **Real-Time Enforcement:** Link data with access policies to ensure sensitive data is accessed appropriately.
+- **Policy Updates Propagation:** When governance policies change (e.g., new regulations), updates propagate across datasets and workflows.
+- **Audit Readiness:** Maintain compliance records and demonstrate adherence to policies.
+
+**Example:**
+
+```turtle
+# Define access policies
+:Policy_PIIAccess rdf:type vekg:AccessPolicy ;
+    rdfs:label "PII Data Access Policy"@en ;
+    vekg:appliesTo :DataSource_CustomerProfiles ;
+    vekg:allowedRoles :DataPrivacyOfficer, :ComplianceManager .
+
+# Link data source with policy
+:DataSource_CustomerProfiles vekg:hasAccessPolicy :Policy_PIIAccess .
+
+# Define user roles
+:User_JaneDoe rdf:type foaf:Person ;
+    rdfs:label "Jane Doe"@en ;
+    vekg:hasRole :DataPrivacyOfficer .
+
+# Enforcement logic (pseudo-code)
+IF User_Requesting_Access hasRole allowedRoles
+THEN Grant_Access
+ELSE Deny_Access
+```
+
+In this example, access to customer profiles is controlled based on the user's role, as defined in the ontology.
+
+#### Dynamic Metadata Propagation
+
+The ontology supports dynamic propagation of metadata:
+
+- **Synchronization Across Datasets:** When an exported view is updated, downstream views and linksets are automatically updated.
+- **Consistency Maintenance:** Ensure active metadata remains synchronized across the entire data architecture.
+- **Efficiency Gains:** Reduce manual efforts in updating metadata across multiple systems.
+
+**Example:**
+
+```turtle
+# Update an exported semantic view
+:ExportedView_CRM vekg:lastModified "2023-10-22T15:00:00Z"^^xsd:dateTime .
+
+# Automatically update dependent linksets
+:LinksetView_Customers vekg:lastModified "2023-10-22T15:05:00Z"^^xsd:dateTime ;
+    vekg:dependsOn :ExportedView_CRM, :ExportedView_Ecom .
+
+# Propagate changes to fusion views
+:FusionView_Customers vekg:lastModified "2023-10-22T15:10:00Z"^^xsd:dateTime ;
+    vekg:dependsOn :LinksetView_Customers .
+```
+
+Metadata updates propagate through the graph, ensuring all components are in sync.
+
+### Conflict Detection and Resolution
+
+#### Active Conflict Identification
+
+The knowledge graph can automatically detect conflicts or inconsistencies:
+
+- **Data Inconsistencies:** Identify differing values for the same attribute across datasets.
+- **Real-Time Flagging:** Highlight issues as they occur, allowing for immediate attention.
+- **Suggested Resolutions:** Propose strategies such as prioritizing data sources based on reliability or timeliness.
+
+**Example:**
+
+```turtle
+# Detect conflicting data
+:Customer123 ex:email "customer@example.com" .
+:Customer123_duplicate ex:email "customer@oldexample.com" .
+
+# Conflict identification
+:Conflict_Email rdf:type vekg:DataConflict ;
+    vekg:conflictingValues "customer@example.com", "customer@oldexample.com" ;
+    vekg:affectedEntity :Customer123 ;
+    vekg:detectedOn "2023-10-22T16:00:00Z"^^xsd:dateTime .
+
+# Suggested resolution
+:Conflict_Email vekg:resolutionSuggestion "Use the most recent email address." ;
+    vekg:prioritySource :DataSource_CRM ;
+    vekg:status "Pending" .
+```
+
+#### Resolution Propagation
+
+Once conflicts are resolved, the ontology ensures:
+
+- **Propagation of Resolutions:** Updates are reflected in all dependent datasets and metadata views.
+- **System-Wide Consistency:** The entire data ecosystem remains consistent and up-to-date.
+- **Reduced Redundancy:** Eliminates conflicting data, improving data quality.
+
+**Example:**
+
+```turtle
+# Resolve the conflict
+:Customer123 ex:email "customer@example.com" .
+:Conflict_Email vekg:status "Resolved" ;
+    vekg:resolutionAppliedOn "2023-10-22T17:00:00Z"^^xsd:dateTime .
+
+# Update dependent views
+:ExportedView_CRM vekg:lastModified "2023-10-22T17:05:00Z"^^xsd:dateTime .
+:FusionView_Customers vekg:lastModified "2023-10-22T17:10:00Z"^^xsd:dateTime .
+```
+
+---
+
+## Use Cases and Examples
+
+### Case Study: Building an EKG for a Retail Company
+
+**Scenario:** A retail company wants to integrate customer data from multiple sources, including a CRM system and e-commerce platform, into a unified EKG to enhance customer insights and personalize marketing strategies.
+
+*(This case study was detailed earlier in the documentation.)*
+
+### Advanced Examples
+
+#### Example 1: Implementing Real-Time Lineage Visibility
+
+**Objective:** Display an up-to-date lineage graph showing how data flows from sources through transformations to final datasets.
+
+**SPARQL Query:**
+
+```sparql
+PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?processLabel ?inputLabel ?outputLabel
+WHERE {
+  ?process a vekg:Transformation ;
+           rdfs:label ?processLabel ;
+           prov:used ?input ;
+           prov:generated ?output .
+  ?input rdfs:label ?inputLabel .
+  ?output rdfs:label ?outputLabel .
+}
+```
+
+**Visualization:**
+
+Use a graph visualization tool to display the results, showing nodes for data sources and transformations, and edges representing "used" and "generated" relationships.
+
+#### Example 2: Enforcing Dynamic Access Policies
+
+**Objective:** Ensure that only authorized users can access sensitive data, and update policies dynamically as regulations change.
+
+**Policy Definition:**
+
+```turtle
+:Policy_GDPRCompliance rdf:type vekg:AccessPolicy ;
+    rdfs:label "GDPR Compliance Policy"@en ;
+    vekg:appliesTo :DataSource_CustomerData ;
+    vekg:allowedRoles :DataPrivacyOfficer, :DataAnalystGDPRCompliant ;
+    vekg:policyEffectiveDate "2023-10-01"^^xsd:date ;
+    vekg:policyReviewDate "2024-10-01"^^xsd:date .
+```
+
+**User Request Handling (Pseudo-code):**
+
+```pseudo
+IF User_Requesting_Access hasRole allowedRoles
+AND CurrentDate >= policyEffectiveDate
+AND CurrentDate < policyReviewDate
+THEN Grant_Access
+ELSE Deny_Access
+```
+
+**Dynamic Update:**
+
+If regulations change, update the `vekg:allowedRoles` or policy dates, and the system will enforce the new policy immediately.
+
+#### Example 3: Conflict Detection and Automatic Resolution
+
+**Objective:** Detect when conflicting data is ingested and resolve it using predefined rules.
+
+**Conflict Detection Rule:**
+
+```turtle
+# Define a rule to detect conflicting phone numbers
+:ConflictDetectionRule_Phone rdf:type vekg:ConflictDetectionRule ;
+    rdfs:label "Phone Number Conflict Rule"@en ;
+    vekg:appliesToProperty ex:phoneNumber ;
+    vekg:conflictCondition "Different values for the same customer" ;
+    vekg:resolutionStrategy "Keep the phone number from the most reliable source" .
+```
+
+**Automatic Resolution:**
+
+```turtle
+# Upon detecting a conflict
+:Customer456 ex:phoneNumber "123-456-7890" .
+:Customer456_duplicate ex:phoneNumber "098-765-4321" .
+
+# The system identifies the conflict and applies the resolution strategy
+:Customer456 ex:phoneNumber "123-456-7890" . # From the most reliable source
+
+# Update the conflict status
+:Conflict_Phone_Customer456 vekg:status "Resolved" ;
+    vekg:resolutionAppliedOn "2023-10-22T18:00:00Z"^^xsd:dateTime .
+```
+
+---
 
 ## Contributing
 
@@ -333,14 +588,23 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-**Note:** This documentation is intended to assist in understanding and utilizing the Metadata Graph Ontology for building Enterprise Knowledge Graphs. For detailed ontology files, additional examples, and support, please refer to the repository files or contact the maintainers.
-
-# Additional Resources
+## Additional Resources
 
 - **Ontology File:** [Download the Metadata Graph Ontology](ontology/metadata-graph.owl)
 - **Example Mappings:** [View example mappings](mappings/)
+- **Sample Data:** [Access sample data sources](data/)
 - **Contact:** For questions or support, please [open an issue](issues/) or contact the maintainers directly.
 
 ---
 
-We hope this documentation helps you in creating robust and integrated Enterprise Knowledge Graphs using the Metadata Graph Ontology. By capturing detailed metadata at each step, you can ensure transparency, reproducibility, and maintainability in your EKG projects. Happy modeling!
+<p align="center">
+  <img src="images/thank-you.png" alt="Thank You" width="200">
+</p>
+
+We hope this documentation helps you in creating robust and integrated Enterprise Knowledge Graphs using the Metadata Graph Ontology. By capturing detailed metadata at each step, you can ensure transparency, reproducibility, and maintainability in your EKG projects.
+
+Happy modeling!
+
+---
+
+*This documentation was generated to assist in understanding and utilizing the Metadata Graph Ontology for building Enterprise Knowledge Graphs. For detailed ontology files, additional examples, and support, please refer to the repository files or contact the maintainers.*
