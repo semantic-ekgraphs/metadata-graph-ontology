@@ -402,9 +402,9 @@ vekg:numberIncrementalFields a owl:DataProperty;
   rdfs:domain drm:DataAsset;
   rdfs:range xsd:integer.
 
-vekg:numberAggregateFields a owl:DataProperty;
-  rdfs:label "number of aggregated fields";
-  rdfs:comment "Informs quantity of aggregated fields in a Data Source.";
+vekg:numberTransformedFields a owl:DataProperty;
+  rdfs:label "number of transformed fields";
+  rdfs:comment "Informs quantity of transformed fields in a Data Source.";
   rdfs:domain drm:DataAsset;
   rdfs:range xsd:integer.  
 
@@ -420,8 +420,8 @@ vekg:uniqueFields a owl:DataProperty;
   rdfs:domain drm:DataAsset;
   rdfs:range xsd:string.  
 
-vekg:aggregateFields a owl:DataProperty;
-  rdfs:comment "Informs aggregated fields in a Data Source.";
+vekg:transformedFields a owl:DataProperty;
+  rdfs:comment "Informs transformed fields in a Data Source.";
   rdfs:domain drm:DataAsset;
   rdfs:range xsd:string.  
 
@@ -446,7 +446,7 @@ vekg:recordCountTime a owl:DataProperty;
 vekg:totalNumberPerField a owl:DataProperty;
   rdfs:label "total number per field";
   rdfs:comment "Informs the total number of values ​​per field.";
-  rdfs:domain xsd:string; #Field
+  rdfs:domain rdf:Resource; #Field
   rdfs:range xsd:integer.
 
 ### Queries in Data Source
