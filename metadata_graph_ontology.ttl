@@ -20,6 +20,7 @@
 @prefix cp: <http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix ldp: <http://www.w3.org/ns/ldp#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix vekg: <http://www.arida.ufc.br/VEKG#> .
 
 
@@ -35,13 +36,13 @@ vekg:MetadataGraph a owl:Class;
 vekg:hasSemanticView a owl:ObjectProperty ;
         rdfs:label "hasSemanticView"@en, "tem visão semântica"@pt, "has Semantic View"@en ;
         rdfs:domain vekg:MetadataGraph;
-        rdfs:range vekg:SemanticView;
+        rdfs:range vekg:SemanticView.
 
 ##############################
 ###### SEMANTIC VIEW
 ##############################
-vekg:SemanticView a owl:Class ;
-  rdfs:label "Semantic View"@en, "Visão Semântica"@pt .
+vekg:SemanticView a owl:Class;
+  rdfs:label "Semantic View"@en, "Visão Semântica"@pt ;
   rdfs:comment """Os principais componentes da visão semântica global são:
 
  - Ontologia de Domínio: responsável por estabelecer um vocabulário a ser compartilhado para descrever as fontes de dados.
@@ -105,12 +106,12 @@ vekg:hasDataSource a owl:ObjectProperty;
 ###################
 
 vekg:Mappings a owl:Class;
-  rdfs:comment "Um conjunto de regras (mapeamentos) que permitem a transformação de uma determinada fonte de dados de acordo com uma Ontologia Local. 
+  rdfs:comment """Um conjunto de regras (mapeamentos) que permitem a transformação de uma determinada fonte de dados de acordo com uma Ontologia Local. 
 
   Esses mapeamentos podem atuar de acordo com um tipo de fonte de dados como: 
 
   R2RML (Para fontes Relacionais): https://www.w3.org/TR/r2rml/;
-  RML (Para CSV; JSON e outras fontes): http://rml.io."@en;
+  RML (Para CSV; JSON e outras fontes): http://rml.io."""@en;
   rdfs:label "Mappings"@en, "Mapeamentos" .
 
 ###
@@ -144,7 +145,7 @@ vekg:distinct a owl:DatatypeProperty;
     rdfs:range xsd:boolean.
 
 vekg:tablesEnvolved a owl:DatatypeProperty;
-    rdfs:label "tabelas envolvidas;
+    rdfs:label "tabelas envolvidas";
     rdfs:comment "Inform envolved tables.";
     rdfs:domain rr:LogicalTable;
     rdfs:range xsd:boolean.
@@ -170,7 +171,7 @@ vekg:foreignKeys a owl:DatatypeProperty;
     rdfs:range xsd:string.
 
 vekg:envolvedClasses a owl:DatatypeProperty;
-    rdfs:label "envolved classes;
+    rdfs:label "envolved classes";
     rdfs:comment "Inform envolved tables.";
     rdfs:domain rr:SubjectMap;
     rdfs:range owl:Class.
@@ -381,6 +382,105 @@ vekg:hasProvenance a owl:ObjectProperty;
   rdfs:label "has provenance"@en, "proveniência"@pt, "provenance"@en .
 
 ###################
+###### DATA SOURCE METADATA
+###################
+vekg:numberNullableFields a owl:DataProperty;
+  rdfs:label "number of nullable fields";
+  rdfs:comment "Informs quantity of nullable fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:integer.
+
+vekg:numberUniqueFields a owl:DataProperty;
+  rdfs:label "number of unique fields";
+  rdfs:comment "Informs quantity of unique fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:integer.
+
+vekg:numberIncrementalFields a owl:DataProperty;
+  rdfs:label "number of incremental fields";
+  rdfs:comment "Informs quantity of incremental fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:integer.
+
+vekg:numberAggregateFields a owl:DataProperty;
+  rdfs:label "number of aggregated fields";
+  rdfs:comment "Informs quantity of aggregated fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:integer.  
+
+vekg:nullableFields a owl:DataProperty;
+  rdfs:label "nullable fields";
+  rdfs:comment "Informs nullable fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:string.  
+
+vekg:uniqueFields a owl:DataProperty;
+  rdfs:label "unique fields";
+  rdfs:comment "Informs unique fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:string.  
+
+vekg:aggregateFields a owl:DataProperty;
+  rdfs:comment "Informs aggregated fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:string.  
+
+vekg:incrementalFields a owl:DataProperty;
+  rdfs:comment "Informs incremental fields in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:string.
+
+vekg:recordCount a owl:DataProperty;
+  rdfs:label "total number of records";
+  rdfs:comment "Informs the total count of values in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:integer.
+
+vekg:recordCountTime a owl:DataProperty;
+  rdfs:label "count time of records";
+  rdfs:comment "Informs the count time of values in a Data Source.";
+  rdfs:domain drm:DataAsset;
+  rdfs:range xsd:dateTime.
+
+# Total per Field
+vekg:totalNumberPerField a owl:DataProperty;
+  rdfs:label "total number per field";
+  rdfs:comment "Informs the total number of values ​​per field.";
+  rdfs:domain xsd:string; #Field
+  rdfs:range xsd:integer.
+
+### Queries in Data Source
+##
+vekg:SourceQuery a rdfs:Class ;
+    rdfs:label "Consulta da Fonte de Dados"@pt ;
+    rdfs:comment "Representa uma consulta possível sob uma fonte de dados."@pt .
+
+vekg:language a rdf:Property ;
+    rdfs:label "Linguagem da Consulta"@pt ;
+    rdfs:domain vekg:SourceQuery ;
+    rdfs:range rdfs:Literal .
+
+vekg:queryString a rdf:Property ;
+    rdfs:label "Texto da Consulta"@pt ;
+    rdfs:domain vekg:SourceQuery ;
+    rdfs:range rdfs:Literal .
+
+vekg:parameters a rdf:Property ;
+    rdfs:label "Parâmetros da Consulta"@pt ;
+    rdfs:domain vekg:SourceQuery ;
+    rdfs:range rdf:List .
+
+vekg:expectedResultFormat a rdf:Property ;
+    rdfs:label "Formato de Resultados Esperado"@pt ;
+    rdfs:domain vekg:ExampleQuery ;
+    rdfs:range rdfs:Literal .
+
+vekg:notes a rdf:Property ;
+    rdfs:label "Notas Adicionais"@pt ;
+    rdfs:domain vekg:ExampleQuery ;
+    rdfs:range rdfs:Literal .
+
+###################
 ###### PROVENANCE
 ###################
 
@@ -411,8 +511,7 @@ pav:lastUpdateOn a owl:DatatypeProperty;
 pav:sourceLastAccessedOn a owl:DatatypeProperty;
   rdfs:label "source last accessed on"@en, "sourceLastAccessedOn"@en, "último acesso a fonte em"@pt .
 
-voag:frequencyOfChange a owl:ObjectProperty;
-  rdfs:label "frequency of change"@en, "frequência de mudança"@pt .
+
 
 ##############################
 ###### SEMANTIC VIEW ONTOLOGY
@@ -442,7 +541,16 @@ vekg:generalizedBy a owl:ObjectProperty;
 ##############################
 vekg:LinksetView a owl:Class ;
     rdfs:label "Linkset View"@en, "Visão de Ligação"@pt ;
-    rdfs:comment "
+    rdfs:comment "A set of linkset views containing rules for establishing sameAs relations between EKG subjects".
+
+vekg:LinkageRule a owl:Class;
+  rdfs:label "Linkage Rule"@en, "Regra de Linkage"@pt ;
+  rdfs:comment "A Linkage Rule used to describe a LinksetView.".
+
+vekg:hasLinkageRule a owl:ObjectProperty ;
+    rdfs:label "has linkage rule"@en, "tem regra de ligação"@pt;
+    rdfs:domain vekg:LinksetView;
+    rdfs:range vekg:LinkageRule.
 
 ###  http://www.arida.ufc.br/VEKG#MatchClass
 vekg:MatchClass rdf:type owl:Class ;
@@ -458,13 +566,20 @@ vekg:MatchProperty rdf:type owl:Class ;
                    rdfs:label "Match Property"@en ,
                               "Propriedade de ligação"@pt .
 
-vekg:hasLinkageRule a owl:ObjectProperty ;
-    rdfs:label "has linkage rule"@en, "tem regra de ligação"@pt;
+vekg:hasMatchClass a owl:ObjectProperty ;
+    rdfs:label "hasMatchClass";
     rdfs:domain vekg:LinksetView;
-    rdfs:range vekg:LinkageRule.
+    rdfs:range vekg:MatchClass.
 
-vekg:LinkageRule a owl:Class;
-  rdfs:label "Linkage Rule"@en, "Regra de Linkage"@pt .
+vekg:hasSourceMatchClass a owl:ObjectProperty;
+    rdfs:subPropertyOf vekg:hasMatchClass;
+    rdfs:domain vekg:LinksetView;
+    rdfs:range vekg:MatchClass.
+
+vekg:hasTargetMatchClass a owl:ObjectProperty;
+    rdfs:subPropertyOf vekg:hasMatchClass;
+    rdfs:domain vekg:LinksetView;
+    rdfs:range vekg:MatchClass.
 
 vekg:LinkFunction a owl:Class ;
      rdfs:label "Link Function" .
@@ -497,20 +612,7 @@ vekg:linkGenerationDate a owl:DatatypeProperty ;
     rdfs:domain vekg:LinksetView;
     rdfs:range xsd:date.
 
-vekg:hasMatchClass a owl:ObjectProperty ;
-    rdfs:label "hasMatchClass";
-    rdfs:domain vekg:LinksetView;
-    rdfs:range vekg:MatchClass.
 
-vekg:hasSourceMatchClass a owl:ObjectProperty;
-    rdfs:subPropertyOf vekg:hasMatchClass;
-    rdfs:domain vekg:LinksetView;
-    rdfs:range vekg:MatchClass.
-
-vekg:hasTargetMatchClass a owl:ObjectProperty;
-    rdfs:subPropertyOf vekg:hasMatchClass;
-    rdfs:domain vekg:LinksetView;
-    rdfs:range vekg:MatchClass.
 
 vekg:hasMatchProperty a owl:AnnotationProperty .
 
@@ -643,7 +745,7 @@ vann:preferedNamespacePrefix a owl:AnnotationProperty .
 
 ###  http://www.arida.ufc.br/VEKG#Connection
 vekg:Connection rdf:type owl:Class ;
-    rdfs:label "Connection"@en, "Conexão"@pt;
+    rdfs:label "Connection"@en, "Conexão"@pt.
 
 vekg:hasConnection a owl:ObjectProperty;
     rdfs:domain vekg:DataSource;
