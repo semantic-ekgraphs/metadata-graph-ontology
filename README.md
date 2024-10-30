@@ -69,10 +69,22 @@ The proposal for the incremental construction of the **META-EKG** comprises four
 
 | Property               | Domain                | Range                  | Description                                             |
 |------------------------|-----------------------|------------------------|---------------------------------------------------------|
+| `vekg:numberNullableFields` | `dcat:Dataset`    | `xsd:integer`| Informs the number of nullable fields in a data source.              |
+| `vekg:numberUniqueFields`   | `dcat:Dataset`    | `xsd:integer`| Informs the number of unique fields in a data source.                |
+| `vekg:numberIncrementalFields` | `dcat:Dataset` | `xsd:integer`| Informs the number of incremental fields in a data source.           |
+| `vekg:numberAggregateFields` | `dcat:Dataset`   | `xsd:integer`| Informs the number of aggregated fields in a data source.            |
+| `vekg:nullableFields`       | `dcat:Dataset`    | `xsd:string` | Lists the nullable fields in a data source.                          |
+| `vekg:uniqueFields`         | `dcat:Dataset`    | `xsd:string` | Lists the unique fields in a data source.                            |
+| `vekg:aggregateFields`      | `dcat:Dataset`    | `xsd:string` | Lists the aggregated fields in a data source.                        |
+| `vekg:incrementalFields`    | `dcat:Dataset`    | `xsd:string` | Lists the incremental fields in a data source.                       |
+| `vekg:recordCount`          | `dcat:Dataset`    | `xsd:integer`| Informs the total number of records in a data source.                |
+| `vekg:recordCountTime`      | `dcat:Dataset`    | `xsd:dateTime`| Indicates the time when the record count was taken.                  |
+| `vekg:totalNumberPerField`  | `xsd:string`      | `xsd:integer`| Informs the total number of values per field.                        |
 | `vekg:hasProvenance`   | `drm:DataAsset`       | `vekg:DataSourceProvenance` | Links a data source to its provenance metadata.         |
 | `pav:createdBy`        | `vekg:DataSourceProvenance` | `foaf:Person`       | The creator of the data source.                         |
 | `pav:createdOn`        | `vekg:DataSourceProvenance` | `xsd:dateTime`     | The date the data source was created.                   |
 | `pav:importedFrom`     | `vekg:DataSourceProvenance` | `rdfs:Resource`    | The source from which the data was imported.            |
+
 
 #### Example
 
@@ -80,6 +92,14 @@ The proposal for the incremental construction of the **META-EKG** comprises four
 :DataSource1 rdf:type drm:DataAsset ;
     rdfs:label "Customer Database"@en ;
     dcterms:description "A relational database containing customer records."@en ;
+    vekg:nullableFields "age","phone";
+    vekg:numberNullableFields 3;
+    vekg:uniqueFields "id","registry";
+    vekg:numberUniqueFields 2;
+    vekg:incrementalFields "id";
+    vekg:numberIncrementalFields 1;
+    vekg:transformedFields "name", "phone";
+    vekg:numberTransformedFields 2;
     vekg:hasProvenance :DataSource1Provenance .
 
 :DataSource1Provenance rdf:type vekg:DataSourceProvenance ;
