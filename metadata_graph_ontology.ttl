@@ -59,6 +59,7 @@ vekg:SemanticView a owl:Class;
  - Set of Linkset Views which specify sameAs relationships between instances in different local semantic views, i.e., instances that represent the same real-world object (identity resolution)."""@en .
 
 
+
 vekg:hasExportedSemanticView a owl:ObjectProperty;
   rdfs:domain vekg:SemanticView;
   rdfs:range vekg:ExportedSemanticView .
@@ -72,7 +73,7 @@ vekg:hasSemanticViewOntology a owl:ObjectProperty;
   rdfs:label "has semantic view ontology"@en, "tem ontologia da visão semântica"@pt .
 
 ##############################
-###### EXPORTED VIEWS
+###### EXPORTED SEMANTIC VIEWS
 ##############################
 
 vekg:ExportedSemanticView a owl:Class;
@@ -126,9 +127,15 @@ rr:logicalTable a owl:ObjectProperty;
   rdfs:comment "Definition of logical table to be mapped."@en;
   rdfs:label "Logical Table"@en, "tabela lógica"@pt .
 
+vekg:dataSource a owl:DatatypeProperty;
+    rdfs:label "data source"@en, "fonte de dados"@pt;
+    rdfs:comment "Data Source used in a Logical Table";
+    rdfs:domain rr:LogicalTable;
+    rdfs:range drm:DataAsset.
+
 vekg:baseTable a owl:DatatypeProperty;
     rdfs:label "base table"@en, "tabela base"@pt;
-    rdfs:comment "Tabala base relacionada ao sujeito / recurso";
+    rdfs:comment "TabEla base relacionada ao sujeito / recurso";
     rdfs:domain rr:LogicalTable;
     rdfs:range xsd:string.
 
@@ -271,8 +278,14 @@ vekg:pomType a owl:DatatypeProperty;
     rdfs:label "Tipo de mapeamento de predicado-objeto"@pt, "Predicate-Object mapping type"@en .
 
 
-### Others
+vekg:prefixies a owl:DatatypeProperty;
+  rdfs:domain vekg:Mappings;
+  rdfs:range xsd:string;
+  rdfs:label "Prefixes"@en, "Prefixos"@pt .
 
+
+
+### R2RML 
 
 rr:TriplesMap a owl:Class;
   rdfs:subClassOf vekg:Mappings;
@@ -284,8 +297,6 @@ vekg:hasTriplesMap a owl:ObjectProperty;
 rr:predicate a owl:ObjectProperty;
   rdfs:comment "Specifies the predicate for the generated triple from the logical table row."@en;
   rdfs:label "predicate"@en, "predicado"@pt .
-
-
 
 rr:subject a owl:ObjectProperty;
   rdfs:domain rr:TriplesMap;
@@ -315,8 +326,6 @@ rr:predicate
   rdfs:comment "Mapping predicate"@en, "Predicado de mapeamento"@pt;
   rdfs:label "mapping predicate"@en, "predicado do mapeamento"@pt .
 
-
-
 vekg:joinChild a owl:DatatypeProperty;
   rdfs:label "Join child property"@en, "Property filho de junção"@pt .
 
@@ -328,14 +337,6 @@ vekg:objectParent a owl:DatatypeProperty;
 
 vekg:objectTemplate a owl:DatatypeProperty;
   rdfs:label "Template do Objeto"@pt, "Object template"@en .
-
-
-
-vekg:prefixies a owl:DatatypeProperty;
-  rdfs:domain vekg:Mappings;
-  rdfs:range xsd:string;
-  rdfs:label "Prefixes"@en, "Prefixos"@pt .
-
 
 ###################
 ###### LOCAL ONTOLOGY
@@ -467,17 +468,18 @@ vekg:queryString a rdf:Property ;
 
 vekg:parameters a rdf:Property ;
     rdfs:label "Parâmetros da Consulta"@pt ;
+    rdfs:comment "Parameters used in Queries";
     rdfs:domain vekg:SourceQuery ;
     rdfs:range rdf:List .
 
 vekg:expectedResultFormat a rdf:Property ;
     rdfs:label "Formato de Resultados Esperado"@pt ;
-    rdfs:domain vekg:ExampleQuery ;
+    rdfs:domain vekg:SourceQuery ;
     rdfs:range rdfs:Literal .
 
 vekg:notes a rdf:Property ;
     rdfs:label "Notas Adicionais"@pt ;
-    rdfs:domain vekg:ExampleQuery ;
+    rdfs:domain vekg:SourceQuery ;
     rdfs:range rdfs:Literal .
 
 ###################
@@ -511,26 +513,31 @@ pav:lastUpdateOn a owl:DatatypeProperty;
 pav:sourceLastAccessedOn a owl:DatatypeProperty;
   rdfs:label "source last accessed on"@en, "sourceLastAccessedOn"@en, "último acesso a fonte em"@pt .
 
-
-
 ##############################
 ###### SEMANTIC VIEW ONTOLOGY
 ##############################
 vekg:SemanticViewOntology a owl:Class;
   rdfs:subClassOf mod:Ontology;
-  rdfs:label "Domain Ontology"@en .
+  rdfs:label "Semantic View Ontology"@en .
 
-vekg:GeneralizationClass a owl:Class;
-  rdfs:label "Generalization Class"@en .
+vekg:composedOfOntology a owl:ObjectProperty;
+  rdfs:subPropertyOf void:vocabulary;
+  rdfs:domain vekg:SemanticViewOntology;
+  rdfs:range vekg:LocalOntology;
+  rdfs:label "has local ontology"@en, "ontologia local"@pt .
 
-## Relates a Specialized Class to a Exported Semantic View
+## Relates a Class of EKG to a Exported Semantic View
 vekg:belongsTo a owl:ObjectProperty;
+        rdfs:label "belongs to";
+        rdfs:comment "Relates an instance of a Ontology to a Named Graph. The object of this property is an IRI/Named Graph";
         rdfs:domain owl:Class;
         rdfs:range vekg:ExportedSemanticView.
 
-vekg:generalizedBy a owl:ObjectProperty;
-        rdfs:domain vekg:MatchClass;
-        rdfs:range vekg:GeneralizationClass.
+vekg:belongsToGraph a owl:ObjectProperty;
+    rdfs:label "belongs to graph";
+    rdfs:comment "Relates an instance of a Ontology to a Named Graph. The object of this property is an IRI/Named Graph";
+    rdfs:domain vekg:SemanticViewOntology, vekg:LocalOntology, vekg:ExportedView;
+    rdfs:range rdfs:Resource, sd:NamedGraph.
 
 #:Empresa_RFB vekg:belongsTo :RFB
 
@@ -542,6 +549,13 @@ vekg:generalizedBy a owl:ObjectProperty;
 vekg:LinksetView a owl:Class ;
     rdfs:label "Linkset View"@en, "Visão de Ligação"@pt ;
     rdfs:comment "A set of linkset views containing rules for establishing sameAs relations between EKG subjects".
+
+
+vekg:linkGenerationTime a owl:DatatypeProperty ;
+    rdfs:label "link generation date";
+    rdfs:comment "Specify the generate date of a link.";
+    rdfs:domain vekg:LinksetView;
+    rdfs:range xsd:datetime.
 
 vekg:LinkageRule a owl:Class;
   rdfs:label "Linkage Rule"@en, "Regra de Linkage"@pt ;
@@ -558,7 +572,6 @@ vekg:MatchClass rdf:type owl:Class ;
                 rdfs:label "Classe de Combinação"@pt ,
                            "Match Class"@en .
 
-
 ###  http://www.arida.ufc.br/VEKG#MatchProperty
 vekg:MatchProperty rdf:type owl:Class ;
                    rdfs:comment "Propriedade utilizada para estabelecer uma Ligação Semântica de duas MatchClass."@pt,
@@ -572,19 +585,23 @@ vekg:hasMatchClass a owl:ObjectProperty ;
     rdfs:range vekg:MatchClass.
 
 vekg:hasSourceMatchClass a owl:ObjectProperty;
+    rdfs:label "has source class";
     rdfs:subPropertyOf vekg:hasMatchClass;
     rdfs:domain vekg:LinksetView;
     rdfs:range vekg:MatchClass.
 
 vekg:hasTargetMatchClass a owl:ObjectProperty;
+    rdfs:label "has target match class";
     rdfs:subPropertyOf vekg:hasMatchClass;
     rdfs:domain vekg:LinksetView;
     rdfs:range vekg:MatchClass.
 
 vekg:LinkFunction a owl:Class ;
-     rdfs:label "Link Function" .
+     rdfs:label "Link Function" ;
+     rdfs:comment "Identify a function used in a Linkage Rule (e.g Compare, Transform, Aggregate)".
 
 vekg:operator a owl:DatatypeProperty ;
+    rdfs:comment "Identify an operator used in a Linkage Rule".
     rdfs:domain vekg:LinkFunction;
     rdfs:range xsd:string.
 
@@ -598,6 +615,11 @@ vekg:Transform a owl:Class;
     rdfs:comment "Function responsible for performing transformations such as: normalization, tokenization, and concatenation of values. Multiple transformation operators can be specified." ;                      
     rdfs:subClassOf vekg:LinkFunction .
 
+# Score a Linkset
+vekg:linkPrecisionScore a owl:DatatypeProperty ;
+    rdfs:domain vekg:LinksetView;
+    rdfs:range xsd:float.
+
 vekg:threshold a owl:DatatypeProperty ;
     rdfs:domain vekg:Compare;
     rdfs:range xsd:float.
@@ -607,18 +629,11 @@ vekg:Aggregate a owl:Class;
     rdfs:comment "Function responsible for combines the similarity scores from multiple comparison or aggregation operators." ;                      
     rdfs:subClassOf vekg:LinkFunction .
 
-vekg:linkGenerationDate a owl:DatatypeProperty ;
-    rdfs:label "link generation date";
-    rdfs:domain vekg:LinksetView;
-    rdfs:range xsd:date.
 
-
-
-vekg:hasMatchProperty a owl:AnnotationProperty .
-
-
-
-vekg:hasLinkFunction a owl:ObjectProperty, owl:AnnotationProperty .
+vekg:hasLinkFunction a owl:ObjectProperty, owl:AnnotationProperty ;
+    rdfs:label "has link function";
+    rdfs:domain vekg:LinkageRule;
+    rdfs:range vekg:LinkFunction.
 
 void:linkPredicate a owl:ObjectProperty;
   rdfs:label "link predicate"@en, "predicado de ligação"@pt .
@@ -634,13 +649,17 @@ vekg:targetView a owl:ObjectProperty ;
 vekg:metric a owl:AnnotationProperty .
 
 
-vekg:inputSource a owl:DatatypeProperty;
-  rdfs:domain vekg:MatchProperty;
-  rdfs:label "Transformação na fonte origem"@pt, "Transformation in source"@en .
+vekg:hasSourceMatchProperty a owl:ObjectProperty;
+    rdfs:label "has source class";
+    rdfs:subPropertyOf vekg:hasMatchProperty;
+    rdfs:domain vekg:LinksetView;
+    rdfs:range vekg:MatchProperty, owl:DatatypeProperty.
 
-vekg:inputTarget a owl:DatatypeProperty;
-  rdfs:domain vekg:MatchProperty;
-  rdfs:label "Transformação na fonte alvo"@pt, "Transformation in target"@en .
+vekg:hasTargetMatchProperty a owl:ObjectProperty;
+    rdfs:label "has target match property";
+    rdfs:subPropertyOf vekg:hasMatchProperty;
+    rdfs:domain vekg:LinksetView;
+    rdfs:range vekg:MatchProperty, owl:DatatypeProperty.
 
 ##############################
 ###### FUSION
@@ -654,9 +673,6 @@ vekg:PropertyFusionAssertion a owl:Class.
 # hasFusionProperty 1
 # fusionFunction 
 
-vekg:FusionProperty a rdf:Property;
-    rdfs:domain vekg:PropertyFusionAssertion.
-
 vekg:hasPropertyFusionAssertion a owl:ObjectProperty;
         rdfs:domain vekg:FusionView;
         rdfs:range vekg:PropertyFusionAssertion.
@@ -665,10 +681,14 @@ vekg:hasFusionProperty a owl:ObjectProperty;
         rdfs:domain vekg:PropertyFusionAssertion;
         rdfs:range vekg:FusionProperty.
 
-vekg:fusionFunction a owl:DatatypeProperty;
+vekg:hasFusionFunction a owl:DatatypeProperty;
     rdfs:label "Fusão de Resolução";
     rdfs:domain vekg:PropertyFusionAssertion;
     rdfs:range xsd:string.
+
+
+vekg:FusionProperty a rdf:Property;
+    rdfs:domain vekg:PropertyFusionAssertion;
 
 ##############################
 ###### UNIFICATION METADATA
